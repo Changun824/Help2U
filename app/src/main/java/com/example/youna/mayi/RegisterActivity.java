@@ -55,14 +55,17 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private FirebaseUser currentUser;
     private String testEmail,testPassword, nickname, passwordAnswer;
-    private int num=0;
+    public int num=0;
+    public int emailCount=0;
     private EditText editText3;
     private EditText editText4;
     private EditText editText5;
     private EditText editText6;
     private EditText editText9;
+    public String[] dataEamil;
+    public String[] emailArray;
+    public String[] comEamil;
 
-    private String dataEamil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,7 +120,7 @@ public class RegisterActivity extends AppCompatActivity {
         Button2.setEnabled(false);
         Button2.setBackgroundColor(Color.rgb(191,191,191));
 
-
+        num=0;
         editText3.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -298,7 +301,7 @@ public class RegisterActivity extends AppCompatActivity {
                     dialog.setMessage("아이디는 빈칸일 수 없습니다").setPositiveButton("확인",null).create();
                     dialog.show();
                 }
-                 else if (true==isExistemail()) {
+                 else if (true==isExistemail(editText3.getText().toString())) {
                     AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
                     dialog2.setMessage("사용 가능한 아이디입니다").setPositiveButton("확인",null).create();
                     dialog2.show();
@@ -394,15 +397,23 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    public boolean isExistemail(){
-
+    public boolean isExistemail(final String abc){
          mDatabase.child("User").addValueEventListener(new ValueEventListener() {
              @Override
              public void onDataChange(DataSnapshot dataSnapshot) {
                  for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                     Log.d("[Test]", "ValueEventListener : " + snapshot.getValue());
+                    // Log.d("[Test]", "ValueEventListener : " + snapshot.getValue());
                     String test=snapshot.getValue().toString();
+                    Log.d("=============[test]==========",test);
+                    emailArray=test.split(",");
+                     Log.d("=============[test]==========",emailArray[2]);
+                     dataEamil=emailArray[2].split("=");
+                     comEamil=new String[100];
+                     comEamil[0]=dataEamil[1];
+                     Log.d("=============[test]==========",dataEamil[1]);
 
+                     Log.d("=============[dd]==========",Integer.toString(num));
+                     num++;
                  }
              }
 
@@ -412,7 +423,20 @@ public class RegisterActivity extends AppCompatActivity {
              }
          });
       //  boolean isExist = testEmail.equals((CharSequence) editText3.getText().toString());
-        return true;
+        for(int i=0;i<num;i++) {
+            if (true == comEamil[num].equals(abc))
+                emailCount = 1;
+        }
+        Log.d("=============[count]==========",Integer.toString(emailCount));
+        if(emailCount==1) {
+            num=0;
+            return
+                    false;
+        }
+        else {
+            num=0;
+            return true;
+        }
     }
 
     public boolean isExistnickname(){
