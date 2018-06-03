@@ -65,9 +65,26 @@ public class LoginActivity extends AppCompatActivity{
         Login_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                email = editText.getText().toString();
-                password = editText2.getText().toString();
-                loginStart(email,password);
+                if(editText.getText().toString().length() == 0 && editText2.getText().toString().length() == 0){
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
+                    dialog.setMessage("이메일과 비밀번호를 입력해주세요").setPositiveButton("확인",null).create();
+                    dialog.show();
+                }
+                else if(editText2.getText().toString().length() !=0 && editText.getText().toString().length() == 0){
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
+                    dialog.setMessage("이메일을 입력해주세요").setPositiveButton("확인",null).create();
+                    dialog.show();
+                }
+                else if(editText.getText().toString().length() !=0 && editText2.getText().toString().length() == 0){
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
+                    dialog.setMessage("비밀번호를 입력해주세요").setPositiveButton("확인",null).create();
+                    dialog.show();
+                }
+                else {
+                    email = editText.getText().toString();
+                    password = editText2.getText().toString();
+                    loginStart(email, password);
+                }
             }
         });
     }
@@ -77,15 +94,20 @@ public class LoginActivity extends AppCompatActivity{
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
                     try {
                         throw task.getException();
                     } catch (FirebaseAuthInvalidUserException e) {
-                        Toast.makeText(LoginActivity.this,"존재하지 않는 이메일 입니다" ,Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
+                        dialog.setMessage("존재하지 않는 이메일 입니다").setPositiveButton("확인",null).create();
+                        dialog.show();
                     } catch (FirebaseAuthInvalidCredentialsException e) {
-                        Toast.makeText(LoginActivity.this,"비밀번호 오류" ,Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
+                        dialog.setMessage("비밀번호 오류").setPositiveButton("확인",null).create();
+                        dialog.show();
                     } catch (FirebaseNetworkException e) {
-                        Toast.makeText(LoginActivity.this,"네트워크 오류" ,Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
+                        dialog.setMessage("네트워크 오류").setPositiveButton("확인",null).create();
+                        dialog.show();
                     } catch (Exception e) {
                     }
                 }else{

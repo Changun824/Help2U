@@ -93,10 +93,8 @@ public class RegisterActivity extends AppCompatActivity {
         editText5 = (EditText)findViewById(R.id.editText5);
 
         editText6 = (EditText)findViewById(R.id.editText6);
-        editText6.setFilters(new InputFilter[]{new CustomInputFilter2()});
 
         editText9 = (EditText)findViewById(R.id.editText9);
-        editText9.setFilters(new InputFilter[]{new CustomInputFilter2()});
 
         final CheckBox checkBox = (CheckBox)findViewById(R.id.checkBox);
         final CheckBox checkBox2 = (CheckBox)findViewById(R.id.checkBox2);
@@ -158,7 +156,9 @@ public class RegisterActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if(s.length() > 10){
                     s.delete(10,11);
-                    Toast.makeText(getApplicationContext(), "10자리까지 입력해주세요", Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
+                    dialog.setMessage("10자리까지 입력해주세요").setPositiveButton("확인",null).create();
+                    dialog.show();
                 }
             }
         });
@@ -183,6 +183,9 @@ public class RegisterActivity extends AppCompatActivity {
                 if(password.equals(confirm)){
                     editText4.setBackgroundColor(Color.rgb(151,199,119));
                     editText5.setBackgroundColor(Color.rgb(151,199,119));
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
+                    dialog.setMessage("비밀번호가 일치합니다").setPositiveButton("확인",null).create();
+                    dialog.show();
                     editText6.setEnabled(true);
                 }
                 else{
@@ -214,7 +217,9 @@ public class RegisterActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if(s.length() > 10){
                     s.delete(10,11);
-                    Toast.makeText(getApplicationContext(), "10자리까지 입력해주세요", Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
+                    dialog.setMessage("10자리까지 입력해주세요").setPositiveButton("확인",null).create();
+                    dialog.show();
                 }
             }
         });
@@ -275,7 +280,6 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             testEmail = editText3.getText().toString();
-
                             testPassword = editText4.getText().toString();
                             nickname = editText6.getText().toString();
                             passwordAnswer = editText9.getText().toString();
@@ -304,10 +308,9 @@ public class RegisterActivity extends AppCompatActivity {
                     dialog2.show();
 
                 }
-
                 else {
                     AlertDialog.Builder dialog3 = new AlertDialog.Builder(RegisterActivity.this);
-                    dialog3.setMessage("이미 사용 중인 아이디입니다").setPositiveButton("확인", null).create();
+                    dialog3.setMessage("사용할 수 없는 아이디입니다").setPositiveButton("확인", null).create();
                     dialog3.show();
                 }
             }
@@ -328,7 +331,7 @@ public class RegisterActivity extends AppCompatActivity {
                     dialog2.show();
                 }else {
                     AlertDialog.Builder dialog3 = new AlertDialog.Builder(RegisterActivity.this);
-                    dialog3.setMessage("이미 사용 중인 닉네임입니다").setPositiveButton("확인", null).create();
+                    dialog3.setMessage("사용할 수 없는 닉네임입니다").setPositiveButton("확인", null).create();
                     dialog3.show();
                 }
             }
@@ -350,23 +353,11 @@ public class RegisterActivity extends AppCompatActivity {
             if(source.equals("") || ps.matcher(source).matches()){
                 return source;
             }
-            Toast.makeText(getApplicationContext(), "영문, 숫자만 입력해주세요", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
+            dialog.setMessage("영문, 숫자만 입력해주세요").setPositiveButton("확인",null).create();
+            dialog.show();
             return "";
 
-        }
-    }
-    //^[ㄱ-가-힣]+$
-    protected class CustomInputFilter2 implements InputFilter {
-        @Override
-        public CharSequence filter(CharSequence source, int start,
-                                   int end, Spanned dest, int dstart, int dend) {
-            Pattern ps = Pattern.compile("^[a-zA-Z0-9]+$");
-
-            if(source.equals("") || ps.matcher(source).matches()){
-                return source;
-            }
-            Toast.makeText(getApplicationContext(), "한글만 입력해주세요", Toast.LENGTH_SHORT).show();
-            return "";
         }
     }
 
