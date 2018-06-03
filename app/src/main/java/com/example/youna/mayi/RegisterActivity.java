@@ -69,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        //mFirebaseDatabase.getInstance().getReference();
         final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.Hints, android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
@@ -298,13 +298,14 @@ public class RegisterActivity extends AppCompatActivity {
                     dialog.setMessage("아이디는 빈칸일 수 없습니다").setPositiveButton("확인",null).create();
                     dialog.show();
                 }
-                 else if (true!=isExistemail()) {
+                 else if (true==isExistemail()) {
                     AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
-
                     dialog2.setMessage("사용 가능한 아이디입니다").setPositiveButton("확인",null).create();
                     dialog2.show();
 
-                }else {
+                }
+
+                else {
                     AlertDialog.Builder dialog3 = new AlertDialog.Builder(RegisterActivity.this);
                     dialog3.setMessage("이미 사용 중인 아이디입니다").setPositiveButton("확인", null).create();
                     dialog3.show();
@@ -394,9 +395,24 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public boolean isExistemail(){
-         mFirebaseDatabase.getReference().child("User");
-        boolean isExist = testEmail.equals((CharSequence) editText3.getText().toString());
-        return isExist;
+
+         mDatabase.child("User").addValueEventListener(new ValueEventListener() {
+             @Override
+             public void onDataChange(DataSnapshot dataSnapshot) {
+                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                     Log.d("[Test]", "ValueEventListener : " + snapshot.getValue());
+                    String test=snapshot.getValue().toString();
+
+                 }
+             }
+
+             @Override
+             public void onCancelled(DatabaseError databaseError) {
+
+             }
+         });
+      //  boolean isExist = testEmail.equals((CharSequence) editText3.getText().toString());
+        return true;
     }
 
     public boolean isExistnickname(){
@@ -409,14 +425,17 @@ public class RegisterActivity extends AppCompatActivity {
 
         private String username;
         private String email;
-
+        private String pass;
+        private String  passAnswer;
         public User() {
 
         }
 
-        public User(String username, String email) {
+        public User(String passAnswer,String pass,String username, String email) {
             this.username = username;
             this.email = email;
+            this.pass=pass;
+            this.passAnswer=passAnswer;
         }
         public String getUsername()
         {
