@@ -46,6 +46,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -67,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
     public String[] dataEamil;
     public String[] emailArray;
     public String[] comEamil;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +140,9 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             public void afterTextChanged(Editable s) {
-
+                if(!editText3.getText().toString().matches("@")){
+                    editText4.setEnabled(false);
+                }
             }
         });
 
@@ -220,10 +224,10 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             public void afterTextChanged(Editable s) {
-                if(s.length() > 10){
-                    s.delete(10,11);
+                if(s.length() > 4){
+                    s.delete(4,5);
                     AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
-                    dialog.setMessage("10자리까지 입력해주세요").setPositiveButton("확인",null).create();
+                    dialog.setMessage("4자리까지 입력해주세요").setPositiveButton("확인",null).create();
                     dialog.show();
                 }
             }
@@ -367,8 +371,8 @@ public class RegisterActivity extends AppCompatActivity {
                     dialog.setMessage("닉네임은 빈칸일 수 없습니다").setPositiveButton("확인",null).create();
                     dialog.show();
                 }
-                else if (true!=isExistnickname()) {
 
+                else if (true!=isExistnickname()) {
                     AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
                     dialog2.setMessage("사용 가능한 닉네임입니다").setPositiveButton("확인",null).create();
                     dialog2.show();
@@ -470,18 +474,20 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }
 
+
                 if(editText3.getText().toString().length() == 0){
                     AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
                     dialog.setMessage("아이디는 빈칸일 수 없습니다").setPositiveButton("확인",null).create();
                     dialog.show();
                 }
                 else if (1==emailCount) {
-                    Log.d("짜증남 : ",Integer.toString(emailCount));
-                    // Log.d("짜증남 2",comEamil[0]);
-                    //Log.d("짜증남 3",comEamil[1]);
-                    AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
-                    dialog2.setMessage("사용 가능한 아이디입니다").setPositiveButton("확인",null).create();
-                    dialog2.show();
+
+                        Log.d("짜증남 : ", Integer.toString(emailCount));
+                        // Log.d("짜증남 2",comEamil[0]);
+                        //Log.d("짜증남 3",comEamil[1]);
+                        AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
+                        dialog2.setMessage("사용 가능한 아이디입니다").setPositiveButton("확인", null).create();
+                        dialog2.show();
 
                 }
                 else {
@@ -538,5 +544,4 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     }
-
 }
