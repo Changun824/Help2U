@@ -126,28 +126,6 @@ public class RegisterActivity extends AppCompatActivity {
         Button2.setBackgroundColor(Color.rgb(191,191,191));
 
         num=0;
-        editText3.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().equals("")){
-                    editText4.setEnabled(false);
-                }
-                else{
-                    editText4.setEnabled(true);
-                }
-            }
-
-            public void afterTextChanged(Editable s) {
-                if(!editText3.getText().toString().matches("@")){
-                    editText4.setEnabled(false);
-                }
-            }
-        });
 
         editText4.addTextChangedListener(new TextWatcher() {
             @Override
@@ -317,29 +295,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         button4.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-<<<<<<< HEAD
-                nickname = editText6.getText().toString();
-
-                if(editText6.getText().toString().length() == 0){
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
-                    dialog.setMessage("닉네임은 빈칸일 수 없습니다").setPositiveButton("확인",null).create();
-                    dialog.show();
-                }
-
-                else if (true!=isExistnickname()) {
-                    AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
-                    dialog2.setMessage("사용 가능한 닉네임입니다").setPositiveButton("확인",null).create();
-                    dialog2.show();
-                }else {
-                    AlertDialog.Builder dialog3 = new AlertDialog.Builder(RegisterActivity.this);
-                    dialog3.setMessage("사용할 수 없는 닉네임입니다").setPositiveButton("확인", null).create();
-                    dialog3.show();
-                }
-=======
                 testFirebase=FirebaseDatabase.getInstance().getReference();
                 num=0;
                 isExistnickname(editText6.getText().toString());
->>>>>>> 70bf282d8a52a3122553e7632643585a686cd0a1
+
 
             }
         });
@@ -432,27 +391,26 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }
 
-
                 if(editText3.getText().toString().length() == 0){
                     AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
                     dialog.setMessage("아이디는 빈칸일 수 없습니다").setPositiveButton("확인",null).create();
                     dialog.show();
                 }
                 else if (1==emailCount) {
-
                         Log.d("짜증남 : ", Integer.toString(emailCount));
                         // Log.d("짜증남 2",comEamil[0]);
                         //Log.d("짜증남 3",comEamil[1]);
                         AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
                         dialog2.setMessage("사용 가능한 아이디입니다").setPositiveButton("확인", null).create();
                         dialog2.show();
-
+                        editText4.setEnabled(true);
                 }
                 else {
                     Log.d("test!!!",Integer.toString(emailCount));
                     AlertDialog.Builder dialog3 = new AlertDialog.Builder(RegisterActivity.this);
                     dialog3.setMessage("사용할 수 없는 아이디입니다").setPositiveButton("확인", null).create();
                     dialog3.show();
+                    editText4.setEnabled(false);
                 }
             }
 
