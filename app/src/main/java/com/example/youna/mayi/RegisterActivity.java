@@ -317,29 +317,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         button4.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-<<<<<<< HEAD
-                nickname = editText6.getText().toString();
 
-                if(editText6.getText().toString().length() == 0){
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
-                    dialog.setMessage("닉네임은 빈칸일 수 없습니다").setPositiveButton("확인",null).create();
-                    dialog.show();
-                }
-
-                else if (true!=isExistnickname()) {
-                    AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
-                    dialog2.setMessage("사용 가능한 닉네임입니다").setPositiveButton("확인",null).create();
-                    dialog2.show();
-                }else {
-                    AlertDialog.Builder dialog3 = new AlertDialog.Builder(RegisterActivity.this);
-                    dialog3.setMessage("사용할 수 없는 닉네임입니다").setPositiveButton("확인", null).create();
-                    dialog3.show();
-                }
-=======
                 testFirebase=FirebaseDatabase.getInstance().getReference();
                 num=0;
                 isExistnickname(editText6.getText().toString());
->>>>>>> 70bf282d8a52a3122553e7632643585a686cd0a1
+
 
             }
         });
