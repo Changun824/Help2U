@@ -70,11 +70,6 @@ public class LoginActivity extends AppCompatActivity{
                     dialog.setMessage("이메일과 비밀번호를 입력해주세요").setPositiveButton("확인",null).create();
                     dialog.show();
                 }
-                else if(!editText.getText().equals("@")){
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
-                    dialog.setMessage("이메일 형식으로 입력해주세요").setPositiveButton("확인",null).create();
-                    dialog.show();
-                }
                 else if(editText2.getText().toString().length() !=0 && editText.getText().toString().length() == 0){
                     AlertDialog.Builder dialog = new AlertDialog.Builder(LoginActivity.this);
                     dialog.setMessage("이메일을 입력해주세요").setPositiveButton("확인",null).create();

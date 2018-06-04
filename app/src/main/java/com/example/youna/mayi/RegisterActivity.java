@@ -397,6 +397,12 @@ public class RegisterActivity extends AppCompatActivity {
                     dialog.show();
                 }
                 else if (1==emailCount) {
+                    if(checkEmail(testEmail)){
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
+                        dialog.setMessage("이메일 형식으로 입력해주세요").setPositiveButton("확인",null).create();
+                        dialog.show();
+                    }
+                    else {
                         Log.d("짜증남 : ", Integer.toString(emailCount));
                         // Log.d("짜증남 2",comEamil[0]);
                         //Log.d("짜증남 3",comEamil[1]);
@@ -404,6 +410,7 @@ public class RegisterActivity extends AppCompatActivity {
                         dialog2.setMessage("사용 가능한 아이디입니다").setPositiveButton("확인", null).create();
                         dialog2.show();
                         editText4.setEnabled(true);
+                    }
                 }
                 else {
                     Log.d("test!!!",Integer.toString(emailCount));
@@ -511,6 +518,13 @@ public class RegisterActivity extends AppCompatActivity {
             return email;
         }
 
+    }
 
+    public boolean checkEmail(String testEmail){
+        String regex = "^[_a-zA-Z0-9-\\.]+@[\\.a-zA-Z0-9-]+\\.[a-zA-Z]+$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(testEmail);
+        boolean isNormal = m.matches();
+        return isNormal;
     }
 }
