@@ -295,10 +295,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         button4.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-<<<<<<< HEAD
-
-=======
->>>>>>> bf3dd0cdb1341130065f1be6ef33ee298f5d1351
                 testFirebase=FirebaseDatabase.getInstance().getReference();
                 num=0;
                 isExistnickname(editText6.getText().toString());
@@ -386,11 +382,11 @@ public class RegisterActivity extends AppCompatActivity {
 
                     Log.d("why",comEamil[i]);
                     if (comEamil[i].equals(abc)) {
-                        emailCount = 0;
+                        emailCount = 1;
                         break;
                     }
                     else {
-                        emailCount = 1;
+                        emailCount = 0;
 
                     }
                 }
@@ -400,21 +396,24 @@ public class RegisterActivity extends AppCompatActivity {
                     dialog.setMessage("아이디는 빈칸일 수 없습니다").setPositiveButton("확인",null).create();
                     dialog.show();
                 }
-                else if (1==emailCount) {
-                        Log.d("짜증남 : ", Integer.toString(emailCount));
-                        // Log.d("짜증남 2",comEamil[0]);
-                        //Log.d("짜증남 3",comEamil[1]);
-                        AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
-                        dialog2.setMessage("사용 가능한 아이디입니다").setPositiveButton("확인", null).create();
-                        dialog2.show();
-                        editText4.setEnabled(true);
-                }
-                else {
+
+                else if(1==emailCount){
                     Log.d("test!!!",Integer.toString(emailCount));
+                    Log.d("짜증남 : ", abc);
+                    Log.d("짜증남2 : ", comEamil[0]);
                     AlertDialog.Builder dialog3 = new AlertDialog.Builder(RegisterActivity.this);
                     dialog3.setMessage("사용할 수 없는 아이디입니다").setPositiveButton("확인", null).create();
                     dialog3.show();
                     editText4.setEnabled(false);
+                }
+                else if (0==emailCount) {
+                    Log.d("짜증남 : ", Integer.toString(emailCount));
+                    // Log.d("짜증남 2",comEamil[0]);
+                    //Log.d("짜증남 3",comEamil[1]);
+                    AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
+                    dialog2.setMessage("사용 가능한 아이디입니다").setPositiveButton("확인", null).create();
+                    dialog2.show();
+                    editText4.setEnabled(true);
                 }
             }
 
