@@ -96,13 +96,12 @@ public class RegisterActivity extends AppCompatActivity {
         editText3.setPrivateImeOptions("defaultInputmode=english;");
 
         editText4 = (EditText)findViewById(R.id.editText4);
-        editText4.setFilters(new InputFilter[]{new CustomInputFilter()});
         editText4.setPrivateImeOptions("defaultInputmode=english;");
 
         editText5 = (EditText)findViewById(R.id.editText5);
 
         editText6 = (EditText)findViewById(R.id.editText6);
-
+        editText6.setFilters(new InputFilter[]{filterAlphaNum});
         editText9 = (EditText)findViewById(R.id.editText9);
 
         final CheckBox checkBox = (CheckBox)findViewById(R.id.checkBox);
@@ -327,6 +326,15 @@ public class RegisterActivity extends AppCompatActivity {
             testEmail = currentUser.getEmail();
         }
     }
+    public InputFilter filterAlphaNum = new InputFilter() {
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            Pattern ps = Pattern.compile("^[ㄱ-ㅣ가-힣]*$");
+            if (!ps.matcher(source).matches()) {
+                return "";
+            }
+            return null;
+        }
+    };
 
 
     protected class CustomInputFilter implements InputFilter {
@@ -382,27 +390,19 @@ public class RegisterActivity extends AppCompatActivity {
                     emailArray=test.split(",");
                     //Log.d("=============[test]==========",emailArray[2]);
                     dataEamil=emailArray[2].split("=");
-
                     comEamil[num]=dataEamil[1];
-                    Log.d("=============[test]==========",dataEamil[1]);
-                    Log.d("ddd",comEamil[num]);
                     num++;
 
                 }
 
                 for(int i=0;i<num;i++) {
-                    Log.d("=============[dd]==========",Integer.toString(num));
-                    Log.d("=============[why]==========",abc);
+
                     Log.d("why",comEamil[i]);
                     if (comEamil[i].equals(abc)) {
-
-                        Log.d("=============[???]==========",abc);
                         emailCount = 0;
                         break;
                     }
                     else {
-                        Log.d("=============[???]==========",comEamil[i]);
-                        Log.d("=============[!!!]==========",abc);
                         emailCount = 1;
 
                     }
