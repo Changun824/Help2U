@@ -7,7 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.constraint.solver.widgets.Snapshot;
 import android.support.v4.view.ScrollingView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +47,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -103,7 +106,7 @@ public class RegisterActivity extends AppCompatActivity {
         editText5 = (EditText)findViewById(R.id.editText5);
 
         editText6 = (EditText)findViewById(R.id.editText6);
-        editText6.setFilters(new InputFilter[]{filterAlphaNum});
+        //editText6.setFilters(new InputFilter[]{filterAlphaNum});
         editText9 = (EditText)findViewById(R.id.editText9);
 
         final CheckBox checkBox = (CheckBox)findViewById(R.id.checkBox);
@@ -136,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().equals("")){
-                    editText5.setEnabled(false);
+                    editText5.setEnabled(true);
                 }
                 else{
                     editText5.setEnabled(true);
@@ -181,7 +184,7 @@ public class RegisterActivity extends AppCompatActivity {
                 else{
                     editText4.setBackgroundColor(Color.rgb(254,138,144));
                     editText5.setBackgroundColor(Color.rgb(254,138,144));
-                    editText6.setEnabled(false);
+                    editText6.setEnabled(true);
                 }
             }
         });
@@ -195,8 +198,8 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().equals("")){
-                    spinner.setEnabled(false);
-                    editText9.setEnabled(false);
+                    spinner.setEnabled(true);
+                    editText9.setEnabled(true);
                 }
                 else{
                     spinner.setEnabled(true);
@@ -223,7 +226,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().equals("")){
-                    checkBox.setEnabled(false);
+                    checkBox.setEnabled(true);
                 }
                 else{
                     checkBox.setEnabled(true);
@@ -240,8 +243,8 @@ public class RegisterActivity extends AppCompatActivity {
                     checkBox2.setEnabled(true);
                 }
                 else{
-                    checkBox2.setEnabled(false);
-                    checkBox3.setEnabled(false);
+                    checkBox2.setEnabled(true);
+                    checkBox3.setEnabled(true);
                     Button2.setBackgroundColor(Color.rgb(191,191,191));
                 }
             }
@@ -254,11 +257,29 @@ public class RegisterActivity extends AppCompatActivity {
                     checkBox3.setEnabled(true);
                 }
                 else{
-                    checkBox3.setEnabled(false);
+                    checkBox3.setEnabled(true);
                     Button2.setBackgroundColor(Color.rgb(191,191,191));
                 }
             }
 
+        });
+        overlapButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                testFirebase=FirebaseDatabase.getInstance().getReference();
+                num=0;
+                isExistemail(editText3.getText().toString());
+
+            }
+        });
+
+        button4.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                testFirebase=FirebaseDatabase.getInstance().getReference();
+                num=0;
+                isExistnickname(editText6.getText().toString());
+
+
+            }
         });
 
         checkBox3.setOnClickListener(new Button.OnClickListener() {
@@ -284,24 +305,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         });
 
-        overlapButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                testFirebase=FirebaseDatabase.getInstance().getReference();
-                num=0;
-                isExistemail(editText3.getText().toString());
 
-            }
-        });
-
-        button4.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                testFirebase=FirebaseDatabase.getInstance().getReference();
-                num=0;
-                isExistnickname(editText6.getText().toString());
-
-
-            }
-        });
         currentUser=FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser != null) {
@@ -309,6 +313,11 @@ public class RegisterActivity extends AppCompatActivity {
             testEmail = currentUser.getEmail();
         }
     }
+
+
+
+
+
     public InputFilter filterAlphaNum = new InputFilter() {
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             Pattern ps = Pattern.compile("^[ㄱ-ㅣ가-힣]*$");
@@ -338,20 +347,28 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void createUser(final String email, final String password){
-
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+    //    mDatabase=FirebaseDatabase.getInstance().getReference();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d("test!!!3@#!#!#",nickname);
+
                         if (task.isSuccessful()) {
-                            currentUser = mAuth.getCurrentUser();
+                            // currentUser = mAuth.getCurrentUser();
+                            /*
                             Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다", Toast.LENGTH_SHORT).show();
-                            mDatabase.child("User").child(nickname).child("닉네임").setValue(nickname);
+
+                            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                            startActivity(i);
+                            */
                             mDatabase.child("User").child(nickname).child("이메일").setValue(testEmail);
+                            mDatabase.child("User").child(nickname).child("닉네임").setValue(nickname);
+
                             mDatabase.child("User").child(nickname).child("비밀번호").setValue(testPassword);
                             // mDatabase.child(nickname).child("비밀번호 질문").setValue(spinner);
                             mDatabase.child("User").child(nickname).child("비밀번호 답변").setValue(passwordAnswer);
+                            Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다", Toast.LENGTH_SHORT).show();
                             finish();
                         } else {
                             Toast.makeText(getApplicationContext(), "회원가입이 실패되었습니다", Toast.LENGTH_SHORT).show();
@@ -359,28 +376,38 @@ public class RegisterActivity extends AppCompatActivity {
                     }
 
                 });
+
     }
 
+
+
     public void isExistemail(final String abc){
+
+
         testFirebase.child("User").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 comEamil=new String[100];
+                emailArray=new String[100];
+                dataEamil= new String[100];
+                num=0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     // Log.d("[Test]", "ValueEventListener : " + snapshot.getValue());
                     String test=snapshot.getValue().toString();
-                    //Log.d("=============[test]==========",test);
-                    emailArray=test.split(",");
-                    //Log.d("=============[test]==========",emailArray[2]);
-                    dataEamil=emailArray[2].split("=");
-                    comEamil[num]=dataEamil[1];
+                    if(snapshot.child("이메일").getValue()==null)
+                        return;
+                    String test2 =snapshot.child("이메일").getValue().toString();
+                    Log.d("=============[test]==========",test);
+                    Log.d("=============[test2]==========",test2);
+
+                    comEamil[num]=test2;
+
+
                     num++;
 
                 }
 
                 for(int i=0;i<num;i++) {
-
-                    Log.d("why",comEamil[i]);
                     if (comEamil[i].equals(abc)) {
                         emailCount = 1;
                         break;
@@ -396,36 +423,6 @@ public class RegisterActivity extends AppCompatActivity {
                     dialog.setMessage("아이디는 빈칸일 수 없습니다").setPositiveButton("확인",null).create();
                     dialog.show();
                 }
-<<<<<<< HEAD
-                else if (1==emailCount) {
-                    if(checkEmail(testEmail)){
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
-                        dialog.setMessage("이메일 형식으로 입력해주세요").setPositiveButton("확인",null).create();
-                        dialog.show();
-                    }
-                    else {
-                        Log.d("짜증남 : ", Integer.toString(emailCount));
-                        // Log.d("짜증남 2",comEamil[0]);
-                        //Log.d("짜증남 3",comEamil[1]);
-                        AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
-                        dialog2.setMessage("사용 가능한 아이디입니다").setPositiveButton("확인", null).create();
-                        dialog2.show();
-                        editText4.setEnabled(true);
-                    }
-                }
-                else {
-=======
-
-                else if(1==emailCount){
->>>>>>> 00a88be13a37ab85b6b27a8d501bdcfc3342902a
-                    Log.d("test!!!",Integer.toString(emailCount));
-                    Log.d("짜증남 : ", abc);
-                    Log.d("짜증남2 : ", comEamil[0]);
-                    AlertDialog.Builder dialog3 = new AlertDialog.Builder(RegisterActivity.this);
-                    dialog3.setMessage("사용할 수 없는 아이디입니다").setPositiveButton("확인", null).create();
-                    dialog3.show();
-                    editText4.setEnabled(false);
-                }
                 else if (0==emailCount) {
                     Log.d("짜증남 : ", Integer.toString(emailCount));
                     // Log.d("짜증남 2",comEamil[0]);
@@ -435,6 +432,17 @@ public class RegisterActivity extends AppCompatActivity {
                     dialog2.show();
                     editText4.setEnabled(true);
                 }
+
+                else if(1==emailCount){
+
+                    Log.d("test!!!",Integer.toString(emailCount));
+                    Log.d("짜증남 : ", abc);
+                    Log.d("짜증남2 : ", comEamil[0]);
+                    AlertDialog.Builder dialog3 = new AlertDialog.Builder(RegisterActivity.this);
+                    dialog3.setMessage("사용할 수 없는 아이디입니다").setPositiveButton("확인", null).create();
+                    dialog3.show();
+                    editText4.setEnabled(false);
+                }
             }
 
             @Override
@@ -442,24 +450,38 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     public void isExistnickname(final String abc){
+
         testFirebase.child("User").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 comNick=new String[100];
+                num=0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Log.d("[Test]", "ValueEventListener : " + snapshot.getValue());
                     String test=snapshot.getValue().toString();
-                    //Log.d("=============[test]==========",test);
-                    nickArray=test.split(",");
-                    //Log.d("=============[test]==========",emailArray[2]);
-                    dataNick=nickArray[3].split("=");
+                    if(snapshot.child("닉네임").getValue()==null)
+                        return;
+                    String test2 =snapshot.child("닉네임").toString();
+                    Log.d("=============[test]==========",test);
+                    Log.d("=============[test2]==========",test2);
+/*
+                    if(test.length()<12)
+                        return;
+                    String[] testArray2=test.split(",");
+                    //nickArray=test.split(",");
 
-                    comNick[num]=dataNick[1];
-                    comNick[num]=dataNick[1].substring(0,dataNick[1].length()-1);
-                    Log.d("=============[test]==========",dataNick[1]);
+                    //String[] dataTestArray=testArray[2].split("=");
+                    //Log.d("=============[test]==========",emailArray[2]);
+                    //dataNick=nickArray[3].split("=");
+                    String[] dataTestArray2=testArray2[3].split("=");
+                    //comNick[num]=dataNick[1];
+                    //comNick[num]=dataNick[1].substring(0,dataNick[1].length()-1);
+                    */
+                    comNick[num]=test2;
                     Log.d("ddd",comNick[num]);
                     num++;
 
@@ -472,13 +494,13 @@ public class RegisterActivity extends AppCompatActivity {
                     if (comNick[i].equals(abc)) {
 
                         Log.d("=============[???]==========",abc);
-                        nickCount = 0;
+                        nickCount = 1;
                         break;
                     }
                     else {
                         Log.d("=============[???]==========",comNick[i]);
                         Log.d("=============[!!!]==========",abc);
-                        nickCount = 1;
+                        nickCount = 0;
                     }
                 }
 
@@ -487,13 +509,13 @@ public class RegisterActivity extends AppCompatActivity {
                     dialog.setMessage("닉네임는 빈칸일 수 없습니다").setPositiveButton("확인",null).create();
                     dialog.show();
                 }
-                else if (1==nickCount) {
+                else if (0==nickCount) {
                     AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
                     dialog2.setMessage("사용 가능한 닉네임입니다").setPositiveButton("확인",null).create();
                     dialog2.show();
 
                 }
-                else {
+                else if(1==nickCount){
                     Log.d("test!!!",Integer.toString(nickCount));
                     AlertDialog.Builder dialog3 = new AlertDialog.Builder(RegisterActivity.this);
                     dialog3.setMessage("사용할 수 없는 닉네임입니다").setPositiveButton("확인", null).create();
@@ -506,6 +528,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
 
@@ -544,3 +567,4 @@ public class RegisterActivity extends AppCompatActivity {
         return isNormal;
     }
 }
+
