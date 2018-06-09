@@ -12,26 +12,40 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class GuardianDisplayActivity extends AppCompatActivity {
     private ImageView imageView12;
     private ImageView imageView13;
+    private TextView codeText;
+    private DatabaseReference testFirebase;
     private FirebaseAuth mAuth;
-
+    private String email;
+    private String authCode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guardian_display);
         mAuth = FirebaseAuth.getInstance();
+        Intent intent = getIntent();
+        email= intent.getStringExtra("email");
+
+        codeText=(TextView)findViewById(R.id.codeText);
 
         imageView12 = (ImageView)findViewById(R.id.imageView12);
         imageView12.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +60,10 @@ public class GuardianDisplayActivity extends AppCompatActivity {
                 show2();
             }
         });
+        testFirebase = FirebaseDatabase.getInstance().getReference();
+        authEmail(email);
+
+
     }
     void show(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -105,4 +123,37 @@ public class GuardianDisplayActivity extends AppCompatActivity {
         AlertDialog alert = alert_ex.create();
         alert.show();
     }
+
+
+
+
+    public void authEmail(final String abc){
+        testFirebase.child("User").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    // Log.d("[Test]", "ValueEventListener : " + snapshot.getValue());
+
+                    if(snapshot.child("이메일").getValue()==null) {
+                        return;
+                    }
+                    String test2 =snapshot.child("이메일").getValue().toString();
+
+                    if(test2.equals(abc)==true) {
+                        authCode = snapshot.child("회원 코드").getValue().toString();
+                        codeText.setText(authCode);
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 }
+

@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity{
         });
     }
 
-    private void loginStart(String email, String password){
+    private void loginStart(final String email, final String password){
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity{
                 }else{
                     currentUser = mAuth.getCurrentUser();
                     Toast.makeText(getApplicationContext(), "로그인 성공", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(LoginActivity.this, GuardianDisplayActivity.class));
+                    startActivity(new Intent(LoginActivity.this, GuardianDisplayActivity.class).putExtra("email",email));
                     finish();
                 }
             }
