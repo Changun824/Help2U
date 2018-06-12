@@ -1,9 +1,11 @@
 package com.example.youna.mayi;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -53,6 +55,9 @@ public class LoginActivity extends AppCompatActivity{
             }
         });
 
+        Intent intent=new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         TextView textView4 = (TextView) findViewById(R.id.textView4);
         textView4.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +92,7 @@ public class LoginActivity extends AppCompatActivity{
                 }
             }
         });
+
     }
 
     private void loginStart(final String email, final String password){

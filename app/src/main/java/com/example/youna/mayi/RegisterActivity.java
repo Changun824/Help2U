@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.constraint.solver.widgets.Snapshot;
@@ -48,6 +49,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,8 +78,10 @@ public class RegisterActivity extends AppCompatActivity {
     public String[] comNick;
     public String[] nickArray;
     public String[] dataNick;
-
-
+    public List emailList;
+    public List nickList;
+    public List codeList;
+    private int dataCnt;
     private int ran_num1; //랜덤4자리 숫자
     private String ran_num2; //랜덤4자리숫자(String)
     private char ran_engle1; //랜덤영어대문자1
@@ -93,12 +97,15 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
+        Intent intent=new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         //mFirebaseDatabase.getInstance().getReference();
         final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.Hints, android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
-
+        cnt=0;
         final TextView textView10 = (TextView) findViewById(R.id.textView10);
         textView10.setMovementMethod(new ScrollingMovementMethod());
 
@@ -139,8 +146,13 @@ public class RegisterActivity extends AppCompatActivity {
         Button2.setEnabled(false);
         Button2.setBackgroundColor(Color.rgb(191, 191, 191));
 
-        num = 0;
+        emailList=new ArrayList();
+        nickList=new ArrayList();
+        codeList=new ArrayList();
 
+        num = 2;
+        testFirebase = FirebaseDatabase.getInstance().getReference();
+        copyFirebase();
         editText4.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -216,10 +228,10 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             public void afterTextChanged(Editable s) {
-                if (s.length() > 4) {
-                    s.delete(4, 5);
+                if (s.length() > 10) {
+                    s.delete(10, 11);
                     AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
-                    dialog.setMessage("4자리까지 입력해주세요").setPositiveButton("확인", null).create();
+                    dialog.setMessage("10자리까지 입력해주세요").setPositiveButton("확인", null).create();
                     dialog.show();
                 }
             }
@@ -270,20 +282,20 @@ public class RegisterActivity extends AppCompatActivity {
         });
         overlapButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                testFirebase = FirebaseDatabase.getInstance().getReference();
-                num = 0;
-                isExistemail(editText3.getText().toString());
+                checkEmail2(editText3.getText().toString());
+                //isExistemail(editText3.getText().toString());
 
             }
         });
 
         button4.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                testFirebase = FirebaseDatabase.getInstance().getReference();
-                num = 0;
-                isExistnickname(editText6.getText().toString());
+           //     testFirebase = FirebaseDatabase.getInstance().getReference();
 
-
+                Log.d("test!!!!!!!!!!!",Integer.toString(cnt));
+               // isExistnickname(editText6.getText().toString());
+               checkNick2(editText6.getText().toString());
+                Log.d("test????",Integer.toString(cnt));
             }
         });
 
@@ -300,6 +312,7 @@ public class RegisterActivity extends AppCompatActivity {
                             nickname = editText6.getText().toString();
                             passwordAnswer = editText9.getText().toString();
                             createUser(testEmail, testPassword);
+
                         }
                     });
                 } else {
@@ -310,13 +323,87 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (currentUser != null) {
-            nickname = currentUser.getDisplayName();
-            testEmail = currentUser.getEmail();
-        }
     }
+
+    public void copyFirebase()
+    {
+        emailList.clear();
+        testFirebase.child("User").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("@@@@@@@@", "!!!");
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if(snapshot.child("이메일").getValue()==null)
+                        break;
+                    emailList.add(snapshot.child("이메일").getValue().toString());
+                    if(snapshot.child("닉네임").getValue()==null)
+                        break;
+                    nickList.add(snapshot.child("닉네임").getValue().toString());
+                    if(snapshot.child("회원 코드").getValue()==null)
+                        break;
+                    codeList.add(snapshot.child("회원 코드").getValue().toString());
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void checkEmail2(final String abc)
+    {
+        int i=0;
+        Log.d("!!@@##",Integer.toString(emailList.size()));
+
+        if(abc.length()==0)
+            Toast.makeText(getApplicationContext(), "아이디는 빈칸일 수 없습니다", Toast.LENGTH_SHORT).show();
+        while(emailList.size()!=i) {
+            if(emailList.get(i).toString().compareTo(abc)==0) {
+                Toast.makeText(getApplicationContext(), "사용할 수 없는 아이디입니다", Toast.LENGTH_SHORT).show();
+                editText4.setEnabled(false);
+            }
+            i++;
+        }
+        Toast.makeText(getApplicationContext(), "사용 가능한 아이디입니다", Toast.LENGTH_SHORT).show();
+        editText4.setEnabled(true);
+    }
+
+    public void checkNick2(final String abc)
+    {
+        int i=0;
+        Log.d("!!@@##",Integer.toString(emailList.size()));
+
+        if(abc.length()==0)
+            Toast.makeText(getApplicationContext(), "닉네임은 빈칸일 수 없습니다", Toast.LENGTH_SHORT).show();
+        while(nickList.size()!=i) {
+            if(nickList.get(i).toString().compareTo(abc)==0) {
+                Toast.makeText(getApplicationContext(), "사용할 수 없는 닉네임입니다", Toast.LENGTH_SHORT).show();
+                editText4.setEnabled(false);
+            }
+            i++;
+        }
+        Toast.makeText(getApplicationContext(), "사용 가능한 닉네임입니다", Toast.LENGTH_SHORT).show();
+        editText4.setEnabled(true);
+    }
+     public void checkCode(final String abc)
+    {
+        int i=0;
+        Log.d("!!@@##",Integer.toString(emailList.size()));
+
+        if(abc.length()==0)
+            Toast.makeText(getApplicationContext(), "닉네임은 빈칸일 수 없습니다", Toast.LENGTH_SHORT).show();
+        while(nickList.size()!=i) {
+            if(nickList.get(i).toString().compareTo(abc)==0) {
+                Toast.makeText(getApplicationContext(), "사용할 수 없는 닉네임입니다", Toast.LENGTH_SHORT).show();
+                editText4.setEnabled(false);
+            }
+            i++;
+        }
+        Toast.makeText(getApplicationContext(), "사용 가능한 닉네임입니다", Toast.LENGTH_SHORT).show();
+        editText4.setEnabled(true);
+    }
+
+
 
     public String makeCode() {
         ran_num1 = (int) (Math.random() * 9999);
@@ -369,12 +456,10 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("test!!!3@#!#!#", nickname);
-
                         if (task.isSuccessful()) {
                             // currentUser = mAuth.getCurrentUser();
 
-                            checkCode();
+                           // checkCode();
 
                             mDatabase.child("User").child(nickname).child("이메일").setValue(testEmail);
                             mDatabase.child("User").child(nickname).child("닉네임").setValue(nickname);
@@ -382,12 +467,18 @@ public class RegisterActivity extends AppCompatActivity {
                             // mDatabase.child(nickname).child("비밀번호 질문").setValue(spinner);
                             mDatabase.child("User").child(nickname).child("비밀번호 답변").setValue(passwordAnswer);
 
-                            //mDatabase.child("User").child(nickname).child("회원 코드").setValue(makeCode());
+                            mDatabase.child("User").child(nickname).child("회원 코드").setValue(makeCode());
                             Toast.makeText(getApplicationContext(), "회원가입이 완료되었습니다", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+                            startActivity(i);
                             finish();
+                            return;
                         } else {
                             Toast.makeText(getApplicationContext(), "회원가입이 실패되었습니다", Toast.LENGTH_SHORT).show();
                         }
+
+                        finish();
+                        return;
                     }
 
                 });
@@ -399,11 +490,9 @@ public class RegisterActivity extends AppCompatActivity {
         testFirebase.child("User").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 String stringCode = makeCode();
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // Log.d("[Test]", "ValueEventListener : " + snapshot.getValue());
 
                     if(snapshot.child("회원 코드").getValue()==null) {
 
@@ -412,14 +501,15 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     String test2 = snapshot.child("회원 코드").getValue().toString();
 
-                    if (test2.equals(stringCode) == true) {
+                    if (test2.equals(stringCode)) {
                         checkCode();
                     } else {
+                        if(snapshot.child("회원코드").getValue()==null)
                         mDatabase.child("User").child(nickname).child("회원 코드").setValue(stringCode);
                         return;
                     }
                 }
-
+                return;
             }
 
 
@@ -428,65 +518,56 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+        return;
     }
 
 
 
 
     public void isExistemail(final String abc){
-
-
         testFirebase.child("User").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 comEamil=new String[100];
                 emailArray=new String[100];
                 dataEamil= new String[100];
-                num=0;
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // Log.d("[Test]", "ValueEventListener : " + snapshot.getValue());
-
+                num=2;
+                Log.d("@@@@@@@@","!!!");
+                for(DataSnapshot snapshot : dataSnapshot.getChildren())
+                {
                     if(snapshot.child("이메일").getValue()==null) {
-                        return;
+                        Toast.makeText(getApplicationContext(), "사용 가능한 아이디입니다", Toast.LENGTH_SHORT).show();
+                        editText4.setEnabled(true);
+                      return;
                     }
+
                     String test2 =snapshot.child("이메일").getValue().toString();
-
-                    Log.d("=============[test2]==========",test2);
-
-                    comEamil[num]=test2;
-
-
-                    num++;
-
-                }
-
-                for(int i=0;i<num;i++) {
-                    if (comEamil[i].equals(abc)) {
-                        emailCount = 1;
+                    if(abc.length()==0)
+                    {
+                        Toast.makeText(getApplicationContext(), "아이디는 빈칸일 수 없습니다", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(abc.compareTo(test2)==0)
+                    {
+                        if(cnt>50) {
+                            num = 0;
+                            return;
+                        }
+                        Toast.makeText(getApplicationContext(), "사용할 수 없는 아이디입니다", Toast.LENGTH_SHORT).show();
+                        editText4.setEnabled(false);
+                          num=1;
                         break;
                     }
-                    else {
-                        emailCount = 0;
-
-                    }
+                    num++;
+                    cnt++;
+                }
+                if(num>=2)
+                {
+                    Toast.makeText(getApplicationContext(), "사용 가능한 아이디입니다", Toast.LENGTH_SHORT).show();
+                    editText4.setEnabled(true);
                 }
 
-                    if (editText3.getText().toString().length() == 0) {
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
-                        dialog.setMessage("아이디는 빈칸일 수 없습니다").setPositiveButton("확인", null).create();
-                        dialog.show();
-                    } else if (0 == emailCount) {
-                        AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
-                        dialog2.setMessage("사용 가능한 아이디입니다").setPositiveButton("확인", null).create();
-                        dialog2.show();
-                        editText4.setEnabled(true);
-                    } else if (1 == emailCount) {
-                        AlertDialog.Builder dialog3 = new AlertDialog.Builder(RegisterActivity.this);
-                        dialog3.setMessage("사용할 수 없는 아이디입니다").setPositiveButton("확인", null).create();
-                        dialog3.show();
-                        editText4.setEnabled(false);
-                    }
+                Log.d("!!!!!!!!!!!!!!!!!!",Integer.toString(cnt));
+                return;
 
             }
 
@@ -496,6 +577,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        return;
     }
 
     public void isExistnickname(final String abc){
@@ -504,67 +586,44 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 comNick=new String[100];
-                num=0;
+                num=2;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Log.d("[Test]", "ValueEventListener : " + snapshot.getValue());
 
-                    if(snapshot.child("닉네임").getValue()==null)
+                    if(snapshot.child("닉네임").getValue()==null) {
+                        Toast.makeText(getApplicationContext(), "사용 가능한 닉네임입니다", Toast.LENGTH_SHORT).show();
+                        editText4.setEnabled(true);
                         return;
+                    }
 
-                    String test2 =snapshot.child("닉네임").toString();
-
-                    Log.d("=============[test2]==========",test2);
-/*
-                    if(test.length()<12)
-                        return;
-                    String[] testArray2=test.split(",");
-                    //nickArray=test.split(",");
-
-                    //String[] dataTestArray=testArray[2].split("=");
-                    //Log.d("=============[test]==========",emailArray[2]);
-                    //dataNick=nickArray[3].split("=");
-                    String[] dataTestArray2=testArray2[3].split("=");
-                    //comNick[num]=dataNick[1];
-                    //comNick[num]=dataNick[1].substring(0,dataNick[1].length()-1);
-                    */
-                    comNick[num]=test2;
-                    Log.d("ddd",comNick[num]);
-                    num++;
-
-                }
-
-                for(int i=0;i<num;i++) {
-                    Log.d("=============[dd]==========",Integer.toString(num));
-                    Log.d("=============[why]==========",abc);
-                    Log.d("why",comNick[i]);
-                    if (comNick[i].equals(abc)) {
-
-                        Log.d("=============[???]==========",abc);
-                        nickCount = 1;
+                    String test2 =snapshot.child("닉네임").getValue().toString();
+                    Log.d("test",abc);
+                    Log.d("test2",test2);
+                    if(abc.length()==0)
+                    {
+                        Toast.makeText(getApplicationContext(), "닉네임은 빈칸일 수 없습니다", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(abc.compareTo(test2)==0)
+                    {
+                        if(cnt>50) {
+                            num = 0;
+                            return;
+                        }
+                        Toast.makeText(getApplicationContext(), "사용할 수 없는 닉네임입니다", Toast.LENGTH_SHORT).show();
+                        editText4.setEnabled(false);
+                        num=1;
                         break;
                     }
-                    else {
-                        Log.d("=============[???]==========",comNick[i]);
-                        Log.d("=============[!!!]==========",abc);
-                        nickCount = 0;
-                    }
+                    num++;
+                    cnt++;
+                }
+                if(num>=2)
+                {
+                    Toast.makeText(getApplicationContext(), "사용 가능한 닉네임입니다", Toast.LENGTH_SHORT).show();
+                    editText4.setEnabled(true);
                 }
 
-                    if (editText6.getText().toString().length() == 0) {
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(RegisterActivity.this);
-                        dialog.setMessage("닉네임는 빈칸일 수 없습니다").setPositiveButton("확인", null).create();
-                        dialog.show();
-                    } else if (0 == nickCount) {
-                        AlertDialog.Builder dialog2 = new AlertDialog.Builder(RegisterActivity.this);
-                        dialog2.setMessage("사용 가능한 닉네임입니다").setPositiveButton("확인", null).create();
-                        dialog2.show();
 
-                    } else if (1 == nickCount) {
-                        Log.d("test!!!", Integer.toString(nickCount));
-                        AlertDialog.Builder dialog3 = new AlertDialog.Builder(RegisterActivity.this);
-                        dialog3.setMessage("사용할 수 없는 닉네임입니다").setPositiveButton("확인", null).create();
-                        dialog3.show();
-                    }
                 }
 
 

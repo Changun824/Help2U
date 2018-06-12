@@ -32,11 +32,16 @@ import com.google.firebase.database.ValueEventListener;
 public class GuardianDisplayActivity extends AppCompatActivity {
     private ImageView imageView12;
     private ImageView imageView13;
+    private TextView heartData;
     private TextView codeText;
     private DatabaseReference testFirebase;
     private FirebaseAuth mAuth;
     private String email;
     private String authCode;
+    private String heartCode;
+    private String lat,lon;
+
+    private int cnt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +51,6 @@ public class GuardianDisplayActivity extends AppCompatActivity {
         email= intent.getStringExtra("email");
 
         codeText=(TextView)findViewById(R.id.codeText);
-
         imageView12 = (ImageView)findViewById(R.id.imageView12);
         imageView12.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -60,6 +64,7 @@ public class GuardianDisplayActivity extends AppCompatActivity {
                 show2();
             }
         });
+        heartData=(TextView)findViewById(R.id.textView18);
         testFirebase = FirebaseDatabase.getInstance().getReference();
         authEmail(email);
 
@@ -96,7 +101,7 @@ public class GuardianDisplayActivity extends AppCompatActivity {
         builder.setPositiveButton("예",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(GuardianDisplayActivity.this, GpsActivity.class);
+                        Intent intent = new Intent(GuardianDisplayActivity.this, GpsActivity.class).putExtra("lat",lat).putExtra("lon",lon);
                         startActivity(intent);
                     }
                 });
@@ -141,7 +146,17 @@ public class GuardianDisplayActivity extends AppCompatActivity {
 
                     if(test2.equals(abc)==true) {
                         authCode = snapshot.child("회원 코드").getValue().toString();
+                        if(snapshot.child("심장박동").getValue()!=null) {
+                            heartCode = snapshot.child("심장박동").getValue().toString();
+                            heartData.setText(heartCode);
+
+                        }
+                        if(snapshot.child("위도").getValue()!=null)
+                            lat=snapshot.child("위도").getValue().toString();
+                        if(snapshot.child("경도").getValue()!=null)
+                            lon=snapshot.child("경도").getValue().toString();
                         codeText.setText(authCode);
+
                     }
                 }
 
