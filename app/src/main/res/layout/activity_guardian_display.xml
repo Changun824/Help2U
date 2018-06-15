@@ -21,7 +21,7 @@
             <ImageView
                 android:id="@+id/imageView3"
                 android:layout_width="match_parent"
-                android:layout_height="412dp"
+                android:layout_height="456dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:scaleType="fitXY"
@@ -34,9 +34,9 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
-                android:textSize="22dp"
+                android:text="심장 박동수 측정"
                 android:textColor="#FFFFFF"
-                android:text="심장 박동수 측정" />
+                android:textSize="22dp" />
 
             <TextView
                 android:id="@+id/textView17"
@@ -46,9 +46,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="60dp"
                 android:text="Today"
-                android:textStyle="bold"
                 android:textColor="#FFFFFF"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textView18"
@@ -56,27 +56,17 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="143dp"
+                android:layout_marginTop="155dp"
                 android:text="Data"
                 android:textColor="#FFFFFF"
                 android:textSize="70dp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView19"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="223dp"
-                android:text="bpm"
-                android:textColor="#FFFFFF"
-                android:textSize="22dp" />
 
             <ImageView
                 android:id="@+id/imageView9"
                 android:layout_width="wrap_content"
-                android:layout_height="272dp"
+                android:layout_height="287dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="102dp"
@@ -86,15 +76,15 @@
                 android:id="@+id/imageView10"
                 android:layout_width="85dp"
                 android:layout_height="80dp"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="218dp"
+                android:layout_marginTop="263dp"
                 app:srcCompat="@drawable/heart_icon2" />
 
             <ImageView
                 android:id="@+id/imageView11"
                 android:layout_width="wrap_content"
-                android:layout_height="156dp"
+                android:layout_height="210dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
                 android:scaleType="fitXY"
@@ -102,31 +92,32 @@
 
             <ImageView
                 android:id="@+id/imageView12"
-                android:layout_width="130dp"
-                android:layout_height="195dp"
-                android:layout_alignTop="@+id/imageView13"
-                android:layout_toEndOf="@+id/textView19"
+                android:layout_width="157dp"
+                android:layout_height="209dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="13dp"
                 app:srcCompat="@drawable/logout_iocn" />
 
             <ImageView
                 android:id="@+id/imageView13"
-                android:layout_width="130dp"
-                android:layout_height="153dp"
+                android:layout_width="163dp"
+                android:layout_height="205dp"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="2dp"
-                android:layout_toStartOf="@+id/textView17"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="11dp"
                 app:srcCompat="@drawable/gps_icon" />
 
             <TextView
                 android:id="@+id/codeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/imageView13"
-                android:layout_alignTop="@+id/textView17"
-                android:layout_marginTop="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="231dp"
+                android:text="#코드번호 codeText"
                 android:textColor="#FFFFFF"
-                android:textSize="22dp"
-                android:text="codeText" />
+                android:textSize="22dp" />
 
         </RelativeLayout>
     </FrameLayout>
