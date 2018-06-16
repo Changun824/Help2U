@@ -66,7 +66,8 @@
                 android:layout_alignStart="@+id/editText2"
                 android:layout_below="@+id/editText2"
                 android:layout_marginTop="13dp"
-                android:background="#4d4d7731"
+                android:background="#73b149"
+                android:state_pressed="true"
                 android:textSize="18dp"
                 android:text="lOGIN" />
 
@@ -89,9 +90,10 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="42dp"
-                android:text="아이디/비밀번호 찾기"
+                android:text="#보호자용"
+                android:textStyle="bold"
                 android:textColor="#FFFFFF"
-                android:textSize="15dp" />
+                android:textSize="20dp" />
 
         </RelativeLayout>
     </FrameLayout>
