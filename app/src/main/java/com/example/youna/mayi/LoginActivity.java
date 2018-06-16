@@ -58,14 +58,6 @@ public class LoginActivity extends AppCompatActivity{
         Intent intent=new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        TextView textView4 = (TextView) findViewById(R.id.textView4);
-        textView4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, SearchActivity.class);
-                startActivity(intent);
-            }
-        });
 
         Login_button.setOnClickListener(new View.OnClickListener(){
             @Override
