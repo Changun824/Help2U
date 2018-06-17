@@ -3,7 +3,9 @@ package com.example.youna.mayi;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,9 +20,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
+import android.os.Handler;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -40,6 +44,12 @@ public class GuardianDisplayActivity extends AppCompatActivity {
     private String authCode;
     private String heartCode;
     private String lat,lon;
+    private String[] ex;
+    private int test;
+    int pStatus = 0;
+    private int tempData;
+    private Handler handler = new Handler();
+    TextView tv;
 
     private int cnt;
     @Override
@@ -49,7 +59,7 @@ public class GuardianDisplayActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         Intent intent = getIntent();
         email= intent.getStringExtra("email");
-
+        tempData=0;
         codeText=(TextView)findViewById(R.id.codeText);
         imageView12 = (ImageView)findViewById(R.id.imageView12);
         imageView12.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +67,7 @@ public class GuardianDisplayActivity extends AppCompatActivity {
                 show();
             }
         });
-
+        test=0;
         imageView13 = (ImageView)findViewById(R.id.imageView13);
         imageView13.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -67,6 +77,7 @@ public class GuardianDisplayActivity extends AppCompatActivity {
         heartData=(TextView)findViewById(R.id.textView18);
         testFirebase = FirebaseDatabase.getInstance().getReference();
         authEmail(email);
+
 
 
     }
@@ -149,6 +160,50 @@ public class GuardianDisplayActivity extends AppCompatActivity {
                         if(snapshot.child("심장박동").getValue()!=null) {
                             heartCode = snapshot.child("심장박동").getValue().toString();
                             heartData.setText(heartCode);
+                            Log.d("@@",heartCode);
+                            ex=heartCode.split("\r");
+
+                            tempData = Integer.parseInt(ex[0]);
+                            test=0;
+                            Log.d("@@##",String.valueOf(tempData));
+                            Resources res = getResources();
+                            Drawable drawable = res.getDrawable(R.drawable.circular);
+                            final ProgressBar mProgress = (ProgressBar) findViewById(R.id.circularProgressbar);
+                            mProgress.setProgress(0);   // Main Progress
+                            mProgress.setSecondaryProgress(100); // Secondary Progress
+                            mProgress.setMax(100); // Maximum Progress
+                            mProgress.setProgressDrawable(drawable);
+                            tv = (TextView) findViewById(R.id.tv);
+                            new Thread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    // TODO Auto-generated method stub
+                                    while (test < tempData) {
+                                        test += 1;
+
+                                        handler.post(new Runnable() {
+
+                                            @Override
+                                            public void run() {
+                                                // TODO Auto-generated method stub
+                                                mProgress.setProgress(test);
+                                            }
+                                        });
+                                        try {
+                                            // Sleep for 200 milliseconds.
+                                            // Just to display the progress slowly
+                                            Thread.sleep(8); //thread will take approx 1.5 seconds to finish
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
+                            }).start();
+
+
+
 
                         }
                         if(snapshot.child("위도").getValue()!=null)
